@@ -62,8 +62,6 @@ public sealed class TilesetRenderer
     IsDirty = true;
   }
 
-
-
   public bool Update(CameraInfo cam)
   {
     if (!IsDirty) return false;
