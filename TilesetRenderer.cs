@@ -34,6 +34,7 @@ public sealed class TilesetRenderer
   public int RenderedTiles => _attached.Count;
   public int LoadingTiles => inFlight;
   public int CachedTileCount => cachedTiles.Count;
+  DateTime lastRendering = DateTime.MinValue;
 
   string apiToken = string.Empty;  // a single token for getting endpoint-specific access tokens
   string? accessToken;             // endpoint-specific
@@ -61,7 +62,7 @@ public sealed class TilesetRenderer
     IsDirty = true;
   }
 
-  DateTime lastRendering = DateTime.MinValue;
+
 
   public bool Update(CameraInfo cam)
   {
