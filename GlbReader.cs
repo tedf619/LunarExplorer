@@ -120,31 +120,31 @@ public static class GlbReader
     {
       var mesh = gltfRoot.Meshes[meshIdx];
 
-      foreach (Primitive prim in mesh.Primitives)
+      foreach (Primitive primitive in mesh.Primitives)
       {
-        var attrs = prim.Attributes;
-        var pos = ReadAccessor(attrs["POSITION"], out int pc, out int n);
+        var attributes = primitive.Attributes;
+        double[] vertices = ReadAccessor(attributes["POSITION"], out int pc, out int n);
 
         var pts = new Point3D[n];
         for (int i = 0; i < n; i++)
         {
-          var p = world.Transform(new Point3D(pos[i * pc], pos[i * pc + 1], pos[i * pc + 2]));
+          Point3D p = world.Transform(new Point3D(vertices[i * pc], vertices[i * pc + 1], vertices[i * pc + 2]));
 
           // Coordinate adjustment: glTF is Y-up, 3D Tiles is Z-up: (x, y, z) -> (x, -z, y). (RTC center is already Z-up)
           pts[i] = new Point3D(p.X + rtc.X, -p.Z + rtc.Y, p.Y + rtc.Z);
         }
 
         int[] indices;
-        var rawValues = ReadAccessor(prim.Indices, out _, out int ic);
+        var rawValues = ReadAccessor(primitive.Indices, out _, out int ic);
         indices = new int[ic];
 
         for (int i = 0; i < ic; i++)
           indices[i] = (int)rawValues[i];
 
         System.Windows.Point[]? uvs = null;
-        if (attrs.ContainsKey("TEXCOORD_0"))
+        if (attributes.ContainsKey("TEXCOORD_0"))
         {
-          int tc = attrs["TEXCOORD_0"];
+          int tc = attributes["TEXCOORD_0"];
           rawValues = ReadAccessor(tc, out int uc, out int un);
           uvs = new Point[un];
 
@@ -152,9 +152,9 @@ public static class GlbReader
             uvs[i] = new Point(rawValues[i * uc], rawValues[i * uc + 1]);
         }
 
-        var (imageBytes, mime) = GetImageBytes(prim);
+        var (imageBytes, mime) = GetImageBytes(primitive);
 
-        var primitive = new GlbPrimitive
+        var glbPrimitive = new GlbPrimitive
         {
           Positions = pts,
           Indices = indices,
@@ -163,7 +163,7 @@ public static class GlbReader
           ImageMime = mime
         };
 
-        Primitives.Add(primitive);
+        Primitives.Add(glbPrimitive);
       }
     }
 

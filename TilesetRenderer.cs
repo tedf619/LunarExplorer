@@ -124,7 +124,7 @@ public sealed class TilesetRenderer
     if (!IsVisible(t, cam)) return true;
 
     double screenSpaceError = ScreenSpaceError(t, cam);
-    bool refine = t.Children.Count > 0 && screenSpaceError > MaxScreenSpaceError;
+    bool needMoreDetailedTiles = t.Children.Count > 0 && screenSpaceError > MaxScreenSpaceError;
 
     if (t.Kind == ContentKind.ExternalTileset)
     {
@@ -133,13 +133,18 @@ public sealed class TilesetRenderer
         needed.Add((t, double.MaxValue));
         return false;
       }
-      refine = t.Children.Count > 0;
+      needMoreDetailedTiles = t.Children.Count > 0;
     }
 
-    if (!refine)
+    if (!needMoreDetailedTiles)
     {
       if (t.Kind != ContentKind.Model) return true;
-      if (t.State == TileState.Loaded) { output.Add(t); return true; }
+      if (t.State == TileState.Loaded) 
+      { 
+        output.Add(t); 
+        return true; 
+      }
+
       needed.Add((t, screenSpaceError));
       return false;
     }

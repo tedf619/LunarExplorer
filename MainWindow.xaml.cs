@@ -19,7 +19,6 @@ public partial class MainWindow : Window
   public MainWindow()
   {
     InitializeComponent();
-    CompositionTarget.Rendering += CompositionTarget_Rendering;
 
     string apiToken = Environment.GetEnvironmentVariable("LUNAR_CESIUM_ION_TOKEN") ?? string.Empty;
 
@@ -30,6 +29,8 @@ public partial class MainWindow : Window
     }
 
     tilesetRenderer = new TilesetRenderer(SceneRoot, apiToken);
+
+    CompositionTarget.Rendering += CompositionTarget_Rendering;
 
     ResetView();
   }
@@ -85,8 +86,6 @@ public partial class MainWindow : Window
   /// </summary>
   void CompositionTarget_Rendering(object? sender, EventArgs e)
   {
-    if (tilesetRenderer == null) return;
-
     if (tilesetRenderer.Update(MakeCameraInfo()))
       UpdateStatusbarTilesText();
   }

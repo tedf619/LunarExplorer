@@ -23,7 +23,7 @@ public partial class MainWindow
   void UpdateStatusbarTilesText()
   {
     var r = tilesetRenderer;
-    if (r == null) return;
+
     TilesText.Text = $"Tiles: {r.RenderedTiles} shown, {r.LoadingTiles} loading, {r.CachedTileCount} cached";
     StatusBarMessage.Text = r.LastError ?? "";
   }

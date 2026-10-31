@@ -41,8 +41,7 @@ public partial class MainWindow
     Cam.NearPlaneDistance = Math.Max(1.0, cameraAltitude * 0.1);
     Cam.FarPlaneDistance = horizon + 40_000;
 
-    if (tilesetRenderer != null)
-      tilesetRenderer.IsDirty = true;  // to update tiles for new camera position
+    tilesetRenderer.IsDirty = true;  // to update tiles for new camera position
 
     UpdateStatusbarAltitudeStatus();
   }
